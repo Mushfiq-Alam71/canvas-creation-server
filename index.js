@@ -26,7 +26,7 @@ async function run() {
     // await client.connect();
 
     const craftCollection = client.db("craftDB").collection("craft");
-    const userCollection = client.db("userDB").collection("user");
+    const userCollection = client.db("craftDB").collection("user");
 
     // create data
     app.post("/craft", async (req, res) => {
