@@ -26,6 +26,7 @@ async function run() {
     // await client.connect();
 
     const craftCollection = client.db("craftDB").collection("craft");
+    const userCollection = client.db("userDB").collection("user");
 
     // create data
     app.post("/craft", async (req, res) => {
@@ -82,11 +83,19 @@ async function run() {
       res.send(result);
     });
 
+    // user related api
+    app.post("/user", async (req, res) => {
+      const user = req.body;
+      console.log(user);
+      const result = await userCollection.insertOne(user);
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
-    // console.log(
-    //   "Pinged your deployment. You successfully connected to MongoDB!"
-    // );
+    console.log(
+      "Pinged your deployment. You successfully connected to MongoDB!"
+    );
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
