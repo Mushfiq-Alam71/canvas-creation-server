@@ -6,7 +6,15 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://b9-a10-b9c50.web.app",
+      "https://b9-a10-b9c50.firebaseapp.com",
+    ],
+  })
+);
 app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.azafshu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -43,14 +51,23 @@ async function run() {
       res.send(result);
     });
 
-    // update data
     app.get("/craft/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await craftCollection.findOne(query);
       res.send(result);
     });
+    app.get("/craft/:email", async (req, res) => {
+      console.log(req.params.email);
+      const result = await craftCollection
+        .find({
+          email: req.params.email,
+        })
+        .toArray();
+      res.send(result);
+    });
 
+    // update data
     app.put("/craft/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
