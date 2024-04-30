@@ -34,7 +34,7 @@ async function run() {
     // await client.connect();
 
     const craftCollection = client.db("craftDB").collection("craft");
-    const userCollection = client.db("craftDB").collection("user");
+    const categoryCollection = client.db("craftDB").collection("category");
 
     // create data
     app.post("/craft", async (req, res) => {
@@ -57,7 +57,7 @@ async function run() {
       const result = await craftCollection.findOne(query);
       res.send(result);
     });
-    app.get("/craft/:email", async (req, res) => {
+    app.get("/craft/email/:email", async (req, res) => {
       console.log(req.params.email);
       const result = await craftCollection
         .find({
@@ -101,17 +101,38 @@ async function run() {
     });
 
     // user related api
-    app.post("/user", async (req, res) => {
-      const user = req.body;
-      console.log(user);
-      const result = await userCollection.insertOne(user);
+    // app.post("/user", async (req, res) => {
+    //   const user = req.body;
+    //   console.log(user);
+    //   const result = await userCollection.insertOne(user);
+    //   res.send(result);
+    // });
+
+    // app.get("/user", async (req, res) => {
+    //   const cursor = userCollection.find();
+    //   const users = await cursor.toArray();
+    //   res.send(users);
+    // });
+
+    app.get("/craft/category/:category", async (req, res) => {
+      const query = { subcategory: req.params.category };
+      const result = await craftCollection.find(query).toArray();
       res.send(result);
     });
 
-    app.get("/user", async (req, res) => {
-      const cursor = userCollection.find();
-      const users = await cursor.toArray();
-      res.send(users);
+    // get single category
+    app.get("/category/id/:id", async (req, res) => {
+      const categoryId = req.params.id;
+      const query = { _id: new ObjectId(categoryId) };
+      const result = await categoryCollection.findOne(query);
+      res.send(result);
+    });
+
+    // get categories
+    app.get("/category", async (req, res) => {
+      const cursor = categoryCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
     });
 
     // Send a ping to confirm a successful connection
